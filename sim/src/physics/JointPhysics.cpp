@@ -48,7 +48,7 @@ namespace mars {
     JointPhysics::JointPhysics(PhysicsInterface *world){
       theWorld = (WorldPhysics*)world;
       jointId = ball_motor = 0;
-      jointCFM = 0.0;
+      jointCFM = jointERP = 0.0;
       cfm = cfm1 = cfm2 = erp1 = erp2 = 0;
       lo1 = lo2 = hi1 = hi2 = 0;
       damping = 0;
@@ -126,6 +126,9 @@ namespace mars {
         calculateCfmErp(jointS);
         if(jointS->config.hasKey("jointCFM")) {
           jointCFM = jointS->config["jointCFM"];
+        }
+        if(jointS->config.hasKey("jointERP")) {
+          jointERP = jointS->config["jointERP"];
         }
 
         joint_type = jointS->type;
@@ -348,6 +351,9 @@ namespace mars {
       if(jointCFM > 0) {
         dJointSetHingeParam(jointId, dParamCFM, jointCFM);
       }
+      if(jointERP > 0) {
+        dJointSetHingeParam(jointId, dParamERP, jointERP);
+      }
       // good value for the SpaceClimber robot
       //dJointSetHingeParam(jointId, dParamCFM, 0.03);
       //dJointSetHingeParam(jointId, dParamCFM, 0.018);
@@ -395,6 +401,9 @@ namespace mars {
       if(jointCFM > 0) {
         dJointSetHinge2Param(jointId, dParamCFM, jointCFM);
       }
+      if(jointERP > 0) {
+        dJointSetHinge2Param(jointId, dParamERP, jointERP);
+      }
     }
 
     void JointPhysics::createSlider(JointData *jointS, dBodyID body1,
@@ -420,6 +429,9 @@ namespace mars {
       }
       if(jointCFM > 0) {
         dJointSetSliderParam(jointId, dParamCFM, jointCFM);
+      }
+      if(jointERP > 0) {
+        dJointSetSliderParam(jointId, dParamERP, jointERP);
       }
       //dJointSetSliderParam(jointId, dParamCFM, cfm);
     }
@@ -513,6 +525,9 @@ namespace mars {
         dJointSetUniversalParam(jointId, dParamHiStop2, hi2);
       if(jointCFM > 0) {
         dJointSetUniversalParam(jointId, dParamCFM, jointCFM);
+      }
+      if(jointERP > 0) {
+        dJointSetUniversalParam(jointId, dParamERP, jointERP);
       }
     }
 
